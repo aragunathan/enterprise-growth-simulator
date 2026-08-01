@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Facilitator — Enterprise Growth Simulator</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<div class="wrap">
+  <h1>Facilitator console</h1>
+
+  <div id="create-panel" class="card">
+    <p class="muted">Create a room to get a join code, QR code, and the shared-screen link.</p>
+    <button id="create-btn" class="primary">Create room</button>
+  </div>
+
+  <div id="room-panel" class="card" style="display:none">
+    <h2>Room <span id="room-code" class="code"></span></h2>
+    <p class="muted">Players: <span id="player-count">0</span></p>
+    <p><a id="screen-link" href="#" target="_blank">Open shared screen ↗</a></p>
+    <img id="qr" class="qr" alt="QR code to join" />
+    <p class="muted">Vote URL: <span id="vote-url"></span></p>
+    <div class="row">
+      <button id="start-btn" class="primary">Start game (Q1)</button>
+    </div>
+  </div>
+
+  <div id="game-panel" class="card" style="display:none">
+    <h2>Q<span id="q-number"></span> — <span id="q-title"></span></h2>
+    <p class="muted"><span id="phase-label"></span> · <span class="timer" id="timer"></span></p>
+    <div id="tally"></div>
+    <div class="row" style="margin-top:16px">
+      <button id="close-vote-btn">Close vote early</button>
+      <button id="reveal-btn">Reveal result</button>
+      <button id="next-btn" class="primary">Advance to next quarter</button>
+      <button id="force-btn" class="danger">Emergency force-advance</button>
+    </div>
+    <div id="reveal-info" class="card" style="margin-top:16px; display:none"></div>
+  </div>
+
+  <div id="report-panel" class="card" style="display:none"></div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/facilitator.js"></script>
+</body>
+</html>

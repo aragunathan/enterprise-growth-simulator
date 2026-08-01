@@ -1,0 +1,752 @@
+{
+  "meta": {
+    "title": "Enterprise Growth Simulator",
+    "version": "1.0",
+    "company": {
+      "location": "Dubai, UAE",
+      "industry": "generic / diversified",
+      "startHeadcount": 4200,
+      "startRevenueUSD": 120000000,
+      "endHeadcount": 7000,
+      "endRevenueUSD": 275000000
+    },
+    "format": {
+      "quarters": 8,
+      "targetGameplayMinutes": 15,
+      "votingMechanism": "qr_websocket",
+      "outcomeModel": "plurality"
+    },
+    "kpis": [
+      {
+        "id": "RG",
+        "name": "Revenue Growth",
+        "baseline": 55,
+        "min": 0,
+        "max": 100,
+        "headline": true
+      },
+      {
+        "id": "Cash",
+        "name": "Cash",
+        "baseline": 70,
+        "min": 0,
+        "max": 100,
+        "headline": false
+      },
+      {
+        "id": "EE",
+        "name": "Employee Experience",
+        "baseline": 55,
+        "min": 0,
+        "max": 100,
+        "headline": false
+      },
+      {
+        "id": "CX",
+        "name": "Customer Experience",
+        "baseline": 60,
+        "min": 0,
+        "max": 100,
+        "headline": false
+      },
+      {
+        "id": "Comp",
+        "name": "Compliance",
+        "baseline": 50,
+        "min": 0,
+        "max": 100,
+        "headline": false
+      },
+      {
+        "id": "Innov",
+        "name": "Innovation",
+        "baseline": 45,
+        "min": 0,
+        "max": 100,
+        "headline": false
+      },
+      {
+        "id": "DV",
+        "name": "Decision Velocity",
+        "baseline": 50,
+        "min": 0,
+        "max": 100,
+        "headline": true
+      },
+      {
+        "id": "EF",
+        "name": "Enterprise Friction",
+        "baseline": 35,
+        "min": 0,
+        "max": 100,
+        "headline": true
+      }
+    ],
+    "frictionDriftPerQuarter": 3,
+    "frictionDriftAppliesTo": "EF",
+    "voteTimerSeconds": 20,
+    "tieBreakPriority": [
+      {
+        "kpi": "EF",
+        "direction": "min"
+      },
+      {
+        "kpi": "Cash",
+        "direction": "max"
+      },
+      {
+        "kpi": "RG",
+        "direction": "max"
+      },
+      {
+        "kpi": "CX",
+        "direction": "max"
+      },
+      {
+        "kpi": "DV",
+        "direction": "max"
+      },
+      {
+        "kpi": "Innov",
+        "direction": "max"
+      },
+      {
+        "kpi": "Comp",
+        "direction": "max"
+      },
+      {
+        "kpi": "EE",
+        "direction": "max"
+      }
+    ],
+    "tieBreakFinalFallback": "first_listed_option"
+  },
+  "quarters": [
+    {
+      "id": 1,
+      "title": "Demand outpaces approvals",
+      "headcount": 4200,
+      "businessContext": "A regional demand surge is pushing deal volume up sharply, but the approval chain \u2014 built for the company's current three business units \u2014 wasn't designed for this velocity. Contracts, vendor onboarding, and hiring requests are stacking up in committees never meant to move this fast.",
+      "whyItHappens": "UAE real estate and infrastructure momentum is pulling enterprise pipelines up fast across sectors. This isn't a lack of process \u2014 it's a process architecture calibrated for steady-state growth, buckling under a compressed timeline.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Stand up a dedicated cross-functional deal-acceleration unit to own the surge",
+          "immediate": {
+            "Cash": -10,
+            "DV": 10,
+            "EF": -5
+          }
+        },
+        {
+          "id": "B",
+          "label": "Temporarily raise self-approval thresholds for business unit heads, formalize governance later",
+          "immediate": {
+            "Comp": -5,
+            "DV": 15,
+            "EF": 5
+          }
+        },
+        {
+          "id": "C",
+          "label": "Triage: fast-track top-tier strategic accounts, slow-walk the rest",
+          "immediate": {
+            "RG": -5,
+            "EF": -10
+          }
+        },
+        {
+          "id": "D",
+          "label": "Bring in a specialist external surge team to clear the backlog without changing internal process",
+          "immediate": {
+            "RG": 5,
+            "Cash": -10,
+            "EF": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "The AED 50M government tender",
+      "headcount": 4300,
+      "businessContext": "A landmark AED 50 million government tender opens \u2014 the kind of flagship win that would meaningfully expand the company's public-sector footprint. But governance and compliance records live across five different business-unit systems, inconsistent in format and worse if Q1 leaned toward speed over process.",
+      "whyItHappens": "The UAE's active public-sector infrastructure pipeline routinely produces opportunities exactly this size. At enterprise scale, the challenge isn't 'we've never done this' \u2014 it's that the company's own compliance history is scattered across units that don't share a system.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Hire external consultants/legal to assemble a compliant bid fast",
+          "immediate": {
+            "Cash": -10,
+            "Comp": 10,
+            "RG": 10
+          }
+        },
+        {
+          "id": "B",
+          "label": "Delay submission a cycle to build proper internal documentation",
+          "immediate": {
+            "RG": -15,
+            "Comp": 10
+          }
+        },
+        {
+          "id": "C",
+          "label": "Unify governance and compliance records across business units, submit only when ready",
+          "immediate": {
+            "DV": -10,
+            "Comp": 15
+          }
+        },
+        {
+          "id": "D",
+          "label": "Submit a narrower bid, covering only the business unit(s) with clean documentation",
+          "immediate": {
+            "RG": 5,
+            "Comp": 10,
+            "EF": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "The Saudi Arabia ask",
+      "headcount": 4600,
+      "businessContext": "A flagship customer relationship \u2014 large enough to matter materially to revenue \u2014 asks the company to establish and deliver operations in Saudi Arabia. Despite the company's scale domestically, it has zero KSA presence, and real cross-border friction applies: separate licensing (MISA), minimum capital requirements, and a corporate tax rate on foreign entities that doesn't apply back home.",
+      "whyItHappens": "Saudi Arabia's Vision 2030-driven expansion is pulling large UAE enterprises across the border to follow anchor clients \u2014 but KSA market entry is a genuinely different regulatory regime, not an extension of existing UAE operations, regardless of how large the parent company already is.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Establish a full licensed Saudi entity \u2014 heavy upfront investment",
+          "immediate": {
+            "Cash": -15,
+            "RG": 15,
+            "EF": 10
+          }
+        },
+        {
+          "id": "B",
+          "label": "Serve the client remotely from the UAE, informally, no local entity",
+          "immediate": {
+            "RG": 5,
+            "Comp": -10
+          }
+        },
+        {
+          "id": "C",
+          "label": "Partner or joint-venture with an existing Saudi-licensed firm",
+          "immediate": {
+            "Cash": -5,
+            "RG": 10,
+            "DV": -5
+          }
+        },
+        {
+          "id": "D",
+          "label": "Decline the expansion, stay UAE-only, risk losing the client",
+          "immediate": {
+            "RG": -10,
+            "EF": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "The board's AI mandate",
+      "headcount": 4900,
+      "businessContext": "The board demands a visible, enterprise-wide AI strategy \u2014 competitors are moving, investors are asking. Years of organic growth and prior acquisitions have left data fragmented across legacy business-unit systems, with no shared governance layer underneath any of it.",
+      "whyItHappens": "Board and investor pressure on visible AI results is intense across UAE enterprises right now, but the confidence large organizations have in their own AI governance frequently outpaces what they could actually defend to a regulator \u2014 a legacy-scale data fragmentation problem, not a 'we never built anything' problem.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Invest in an enterprise-wide data governance foundation first, delay visible pilots",
+          "immediate": {
+            "Comp": 10,
+            "Innov": -5,
+            "EF": -5
+          }
+        },
+        {
+          "id": "B",
+          "label": "Launch a flashy customer-facing AI pilot now, for the board",
+          "immediate": {
+            "RG": 5,
+            "Comp": -10,
+            "Innov": 15,
+            "EF": 10
+          }
+        },
+        {
+          "id": "C",
+          "label": "Bring in an external consultancy to fast-track foundation and pilot together",
+          "immediate": {
+            "RG": 5,
+            "Cash": -15,
+            "Comp": 10,
+            "Innov": 10
+          }
+        },
+        {
+          "id": "D",
+          "label": "Let each business unit adopt AI tools independently, no central strategy",
+          "immediate": {
+            "RG": -5,
+            "Innov": 10,
+            "DV": 5,
+            "EF": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "E-invoicing becomes mandatory",
+      "headcount": 5200,
+      "businessContext": "The UAE's e-invoicing mandate becomes binding for the company \u2014 well above the revenue threshold that triggers the earliest compliance deadline. Finance, procurement, ERP, tax, and contracts across every business unit must connect to a certified structured invoicing system on a hard regulatory date.",
+      "whyItHappens": "This is a live regulatory clock, not a hypothetical \u2014 a phased mandate with a pilot phase and hard mandatory dates already set by the Federal Tax Authority, and at this revenue scale the company is squarely in the first wave required to comply.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Appoint an accredited service provider, rebuild the workflow properly across all business units",
+          "immediate": {
+            "Cash": -10,
+            "Comp": 15,
+            "DV": -5,
+            "RG": 5
+          }
+        },
+        {
+          "id": "B",
+          "label": "Bolt on the minimum technical compliance layer, no workflow redesign",
+          "immediate": {
+            "Cash": -5,
+            "Comp": 5,
+            "EF": 10
+          }
+        },
+        {
+          "id": "C",
+          "label": "Bring in a specialist implementation partner to lead the transition",
+          "immediate": {
+            "Cash": -15,
+            "Comp": 15,
+            "DV": 5
+          }
+        },
+        {
+          "id": "D",
+          "label": "Roll out full compliance to the legally in-scope business units now, stage the rest over the following year",
+          "immediate": {
+            "Cash": -5,
+            "Comp": 10,
+            "EF": 5,
+            "RG": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Cyber incident",
+      "headcount": 5400,
+      "businessContext": "A security incident is detected, touching systems shared across multiple business units. IT freezes all new deployments company-wide to contain it, halting several in-flight projects.",
+      "whyItHappens": "Rapid, multi-unit scaling plus possibly ungoverned AI/tooling sprawl from Q4 widens the attack surface considerably at this size \u2014 a pattern many large, fast-scaling GCC enterprises are currently facing as adoption outpaces security architecture.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Full freeze until root cause is confirmed and fixed \u2014 security first",
+          "immediate": {
+            "Comp": 10,
+            "Innov": -15,
+            "EF": -5
+          }
+        },
+        {
+          "id": "B",
+          "label": "Targeted freeze on affected systems only, keep the rest moving",
+          "immediate": {
+            "Innov": -10,
+            "DV": 5,
+            "EF": 5
+          }
+        },
+        {
+          "id": "C",
+          "label": "Continue deployments, patch in parallel \u2014 accept short-term risk",
+          "immediate": {
+            "RG": -10,
+            "Comp": -15,
+            "Innov": 5,
+            "EF": 15
+          }
+        },
+        {
+          "id": "D",
+          "label": "Bring in an external incident response firm to compress the freeze window",
+          "immediate": {
+            "Cash": -15,
+            "Comp": 10,
+            "EF": -10
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "The acquisition",
+      "headcount": 5400,
+      "postMergerHeadcount": 6800,
+      "businessContext": "The company acquires a sizable competitor to consolidate market position and secure talent. Now there are two ERPs, two HR systems, different procurement policies, duplicate vendors, and conflicting approval hierarchies \u2014 at a scale where 'just merge the spreadsheets' was never an option.",
+      "whyItHappens": "Consolidation is a common pattern for large, fast-growing UAE enterprises once capital is available and yesterday's competitors become today's acquisition targets.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Integrate everything immediately \u2014 one ERP, one HR system, one policy set",
+          "immediate": {
+            "Cash": -15,
+            "EF": -15,
+            "DV": 15,
+            "EE": -10,
+            "RG": 10
+          }
+        },
+        {
+          "id": "B",
+          "label": "Run both systems in parallel for a year, integrate slowly",
+          "immediate": {
+            "Cash": -5,
+            "EF": 15,
+            "DV": -10,
+            "RG": -5
+          }
+        },
+        {
+          "id": "C",
+          "label": "Keep the acquired company semi-autonomous, integrate only finance/compliance",
+          "immediate": {
+            "Cash": -10,
+            "Comp": 10,
+            "EF": 10,
+            "RG": 5
+          }
+        },
+        {
+          "id": "D",
+          "label": "Integrate people and culture first, defer systems integration entirely",
+          "immediate": {
+            "EE": 10,
+            "EF": 15,
+            "DV": -15,
+            "RG": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Sudden regional disruption",
+      "headcount": 7000,
+      "businessContext": "Overnight, a regional security disruption closes off a key shipping route the company depends on for materials and client deliveries. Freight costs and insurance premiums for regional operations spike immediately. A major client relationship \u2014 the kind that matters materially to revenue \u2014 depends on reliable, on-time delivery through exactly this period.",
+      "whyItHappens": "Operating in this region carries this kind of macro shock as a recurring, if unpredictable, operational risk \u2014 the sort of disruption every enterprise here has to have a real answer for, whether or not it's ever actually hit them.",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Absorb the cost \u2014 pay premium freight/insurance to hold service levels for the client",
+          "immediate": {
+            "Cash": -15,
+            "CX": 15
+          }
+        },
+        {
+          "id": "B",
+          "label": "Renegotiate scope and timeline with the client, buy time to find alternatives",
+          "immediate": {
+            "RG": -5,
+            "CX": -10
+          }
+        },
+        {
+          "id": "C",
+          "label": "Rapidly diversify to emergency alternative suppliers/routes \u2014 real cost, builds lasting resilience",
+          "immediate": {
+            "RG": 5,
+            "Cash": -10,
+            "CX": 5,
+            "EF": -5
+          }
+        },
+        {
+          "id": "D",
+          "label": "Bring in a specialized logistics/risk partner to manage the disruption on a shared-risk contract",
+          "immediate": {
+            "Cash": -10,
+            "CX": 10,
+            "EF": -5
+          }
+        }
+      ]
+    }
+  ],
+  "delayedEffects": [
+    {
+      "originQuarter": 1,
+      "originChoice": "A",
+      "targetQuarter": 2,
+      "kpi": "Comp",
+      "delta": 5,
+      "note": "Q1->Q2: clean approvals trail"
+    },
+    {
+      "originQuarter": 1,
+      "originChoice": "C",
+      "targetQuarter": 2,
+      "kpi": "Comp",
+      "delta": 5,
+      "note": "Q1->Q2: clean approvals trail"
+    },
+    {
+      "originQuarter": 1,
+      "originChoice": "B",
+      "targetQuarter": 2,
+      "kpi": "Comp",
+      "delta": -5,
+      "note": "Q1->Q2: informal approvals leave gaps"
+    },
+    {
+      "originQuarter": 1,
+      "originChoice": "B",
+      "targetQuarter": 2,
+      "kpi": "EF",
+      "delta": 5,
+      "note": "Q1->Q2: informal approvals leave gaps"
+    },
+    {
+      "originQuarter": 1,
+      "originChoice": "D",
+      "targetQuarter": 2,
+      "kpi": "Comp",
+      "delta": -5,
+      "note": "Q1->Q2: external surge team unfamiliar with governance"
+    },
+    {
+      "originQuarter": 1,
+      "originChoice": "D",
+      "targetQuarter": 2,
+      "kpi": "EF",
+      "delta": 5,
+      "note": "Q1->Q2: external surge team unfamiliar with governance"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "A",
+      "targetQuarter": 5,
+      "kpi": "Comp",
+      "delta": 10,
+      "note": "Q2->Q5: governance ground covered eases e-invoicing"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "C",
+      "targetQuarter": 5,
+      "kpi": "Comp",
+      "delta": 10,
+      "note": "Q2->Q5: governance ground covered eases e-invoicing"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "A",
+      "targetQuarter": 5,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q2->Q5: governance ground covered eases e-invoicing"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "C",
+      "targetQuarter": 5,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q2->Q5: governance ground covered eases e-invoicing"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "D",
+      "targetQuarter": 5,
+      "kpi": "Comp",
+      "delta": 5,
+      "note": "Q2->Q5: partial ground covered"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "B",
+      "targetQuarter": 5,
+      "kpi": "Comp",
+      "delta": -5,
+      "note": "Q2->Q5: no governance work done, missed the cycle"
+    },
+    {
+      "originQuarter": 2,
+      "originChoice": "B",
+      "targetQuarter": 5,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q2->Q5: no governance work done, missed the cycle"
+    },
+    {
+      "originQuarter": 3,
+      "originChoice": "A",
+      "targetQuarter": 7,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q3->Q7: clean cross-border structure eases M&A"
+    },
+    {
+      "originQuarter": 3,
+      "originChoice": "C",
+      "targetQuarter": 7,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q3->Q7: clean cross-border structure eases M&A"
+    },
+    {
+      "originQuarter": 3,
+      "originChoice": "B",
+      "targetQuarter": 7,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q3->Q7: informal setup leaves hidden liabilities"
+    },
+    {
+      "originQuarter": 4,
+      "originChoice": "A",
+      "targetQuarter": 6,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q4->Q6: governed AI softens cyber incident"
+    },
+    {
+      "originQuarter": 4,
+      "originChoice": "C",
+      "targetQuarter": 6,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q4->Q6: governed AI softens cyber incident"
+    },
+    {
+      "originQuarter": 4,
+      "originChoice": "B",
+      "targetQuarter": 6,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q4->Q6: ungoverned AI/tools widen attack surface"
+    },
+    {
+      "originQuarter": 4,
+      "originChoice": "D",
+      "targetQuarter": 6,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q4->Q6: ungoverned AI/tools widen attack surface"
+    },
+    {
+      "originQuarter": 6,
+      "originChoice": "A",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q6->Q8: practiced crisis response"
+    },
+    {
+      "originQuarter": 6,
+      "originChoice": "D",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q6->Q8: practiced crisis response"
+    },
+    {
+      "originQuarter": 6,
+      "originChoice": "A",
+      "targetQuarter": 8,
+      "kpi": "DV",
+      "delta": 5,
+      "note": "Q6->Q8: practiced crisis response"
+    },
+    {
+      "originQuarter": 6,
+      "originChoice": "D",
+      "targetQuarter": 8,
+      "kpi": "DV",
+      "delta": 5,
+      "note": "Q6->Q8: practiced crisis response"
+    },
+    {
+      "originQuarter": 6,
+      "originChoice": "C",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q6->Q8: still improvising under pressure"
+    },
+    {
+      "originQuarter": 6,
+      "originChoice": "C",
+      "targetQuarter": 8,
+      "kpi": "DV",
+      "delta": -5,
+      "note": "Q6->Q8: still improvising under pressure"
+    },
+    {
+      "originQuarter": 7,
+      "originChoice": "A",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q7->Q8: clean integration carries into finale"
+    },
+    {
+      "originQuarter": 7,
+      "originChoice": "C",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": -5,
+      "note": "Q7->Q8: clean integration carries into finale"
+    },
+    {
+      "originQuarter": 7,
+      "originChoice": "B",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q7->Q8: still tangled entering finale"
+    },
+    {
+      "originQuarter": 7,
+      "originChoice": "D",
+      "targetQuarter": 8,
+      "kpi": "EF",
+      "delta": 10,
+      "note": "Q7->Q8: still tangled entering finale"
+    }
+  ],
+  "report": {
+    "layer1_deterministic": {
+      "headlineFramingRule": "One sentence on final EF vs baseline",
+      "scorecard": "all 8 KPIs, final value vs Q1 baseline",
+      "biggestSwingsCount": 3,
+      "closingDiscussionQuestionRule": "closest vote split across the 8 decisions; fallback: quarter with largest single contribution to final EF"
+    },
+    "layer2_ai_generated": {
+      "trigger": "on Q8 vote close, before reveal screen renders",
+      "inputFields": [
+        "choicesByTopic",
+        "kpiTrajectory",
+        "biggestSwings"
+      ],
+      "outputSpec": "2-3 sentences, facilitator-readable aloud, must name at least 2 specific quarters by topic",
+      "fallbackTemplate": "Over the two simulated years, the room balanced growth against friction \u2014 closing at {RG} growth and {EF} friction."
+    }
+  }
+}
