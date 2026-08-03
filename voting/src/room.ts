@@ -11,6 +11,7 @@ import {
   type VoteCounts,
   type VoteResolution,
 } from "../../simulation/src/index.js";
+import { generateLayer2Narrative, type Layer2Options } from "./layer2.js";
 
 export type Phase = "lobby" | "voting" | "closed" | "revealed" | "report";
 
@@ -52,11 +53,20 @@ export class Room {
   timer: ReturnType<typeof setTimeout> | null = null;
   playerIds = new Set<string>();
 
-  constructor(code: string, gameData: GameData) {
+  /**
+   * Kicked off the instant the report is computable (Q8's vote resolved, inside
+   * reveal(), before the reveal screen broadcasts) so the Claude API's latency is
+   * hidden behind that transition rather than paid when the report is requested.
+   */
+  layer2Narrative: Promise<string> | null = null;
+  private readonly layer2Options: Layer2Options;
+
+  constructor(code: string, gameData: GameData, layer2Options: Layer2Options = {}) {
     this.code = code;
     this.facilitatorToken = randomUUID();
     this.gameData = gameData;
     this.engine = new GameEngine(gameData);
+    this.layer2Options = layer2Options;
   }
 
   get currentQuarter(): Quarter | undefined {
@@ -127,6 +137,15 @@ export class Room {
 
     if (this.engine.isComplete) {
       this.report = generateLayer1Report(this.gameData, this.engine, this.voteResolutions);
+      // Fired here — the instant the final quarter's vote is resolved — so the API
+      // call's latency runs in the background during the reveal transition instead
+      // of being paid when the report screen is actually requested.
+      this.layer2Narrative = generateLayer2Narrative(
+        this.gameData,
+        this.voteResolutions,
+        this.report,
+        this.layer2Options,
+      );
       this.phase = "report";
     }
 

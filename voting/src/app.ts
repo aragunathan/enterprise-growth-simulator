@@ -5,9 +5,9 @@ import express, { type Express } from "express";
 import QRCode from "qrcode";
 import { Server as SocketIOServer } from "socket.io";
 import { loadGameData, type ChoiceId, type GameData } from "../../simulation/src/index.js";
+import type { Layer2Options } from "./layer2.js";
 import { Room } from "./room.js";
 import {
-  LAYER2_PLACEHOLDER,
   type ClientRole,
   type FacilitatorActionRequest,
   type RoomJoinRequest,
@@ -20,6 +20,7 @@ const PUBLIC_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "public")
 export interface AppOptions {
   gameData?: GameData;
   publicUrl?: string;
+  layer2?: Layer2Options;
 }
 
 export interface AppHandle {
@@ -86,16 +87,17 @@ export function createApp(options: AppOptions = {}): AppHandle {
     broadcastQuarterStart(room);
   }
 
-  function broadcastReveal(room: Room, resolution: ReturnType<Room["reveal"]>["resolution"], result: ReturnType<Room["reveal"]>["result"]): void {
+  async function broadcastReveal(room: Room, resolution: ReturnType<Room["reveal"]>["resolution"], result: ReturnType<Room["reveal"]>["result"]): Promise<void> {
     io.to(room.code).emit("vote:revealed", {
       resolution,
       result,
       isGameComplete: room.engine.isComplete,
     });
     if (room.phase === "report" && room.report) {
+      const layer2Narrative = room.layer2Narrative ? await room.layer2Narrative : "";
       io.to(room.code).emit("game:report", {
         report: room.report,
-        layer2Placeholder: LAYER2_PLACEHOLDER,
+        layer2Narrative,
       });
     }
   }
@@ -109,7 +111,7 @@ export function createApp(options: AppOptions = {}): AppHandle {
   io.on("connection", (socket) => {
     socket.on("room:create", (_payload: unknown, cb: Ack<unknown>) => {
       const code = generateUniqueRoomCode(rooms);
-      const room = new Room(code, gameData);
+      const room = new Room(code, gameData, options.layer2 ?? {});
       rooms.set(code, room);
 
       const voteUrl = `${resolvePublicUrl()}/vote/${code}`;
@@ -201,7 +203,7 @@ export function createApp(options: AppOptions = {}): AppHandle {
       try {
         requireFacilitator(room, payload.facilitatorToken);
         const { resolution, result } = room.reveal();
-        broadcastReveal(room, resolution, result);
+        void broadcastReveal(room, resolution, result);
         cb(ok({}));
       } catch (error) {
         cb(err(error instanceof Error ? error.message : "could not reveal result"));
@@ -229,7 +231,7 @@ export function createApp(options: AppOptions = {}): AppHandle {
         requireFacilitator(room, payload.facilitatorToken);
         const outcome = room.forceAdvance();
         if (outcome) {
-          broadcastReveal(room, outcome.resolution, outcome.result);
+          void broadcastReveal(room, outcome.resolution, outcome.result);
         }
         if (room.phase === "voting") {
           scheduleAutoClose(room);

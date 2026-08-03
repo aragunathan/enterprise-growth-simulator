@@ -24,7 +24,10 @@ describe("voting layer e2e (real Socket.io connections, simulating separate brow
   const sockets: Socket[] = [];
 
   beforeAll(async () => {
-    handle = createApp();
+    // timeoutMs: 0 forces the Layer 2 narrative down the fallback path deterministically,
+    // regardless of whether ANTHROPIC_API_KEY happens to be set in this environment —
+    // this suite only asserts on Layer 1 (deterministic report) behavior.
+    handle = createApp({ layer2: { timeoutMs: 0 } });
     await new Promise<void>((resolve) => handle.httpServer.listen(0, resolve));
     const port = (handle.httpServer.address() as AddressInfo).port;
     baseUrl = `http://localhost:${port}`;
@@ -137,7 +140,13 @@ describe("voting layer e2e (real Socket.io connections, simulating separate brow
       } else {
         const report = await reportPromise!;
         expect(report.report.scorecard).toHaveLength(8);
-        expect(report.layer2Placeholder).toMatch(/not yet wired up/i);
+        // No ANTHROPIC_API_KEY in the test environment, so this always resolves via
+        // the fallback template — but with the real computed numbers, not placeholder text.
+        const rg = report.report.scorecard.find((e: { kpi: string }) => e.kpi === "RG");
+        const ef = report.report.scorecard.find((e: { kpi: string }) => e.kpi === "EF");
+        expect(report.layer2Narrative).toBe(
+          `Over the two simulated years, the room balanced growth against friction — closing at ${rg.final} growth and ${ef.final} friction.`,
+        );
 
         const finalFromServer: Record<string, number> = {};
         for (const entry of report.report.scorecard as { kpi: string; final: number }[]) {

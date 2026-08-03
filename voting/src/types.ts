@@ -65,9 +65,5 @@ export interface VoteRevealedEvent {
 
 export interface GameReportEvent {
   report: RoomSnapshot["report"];
-  layer2Placeholder: string;
+  layer2Narrative: string;
 }
-
-export const LAYER2_PLACEHOLDER =
-  "AI-generated executive narrative not yet wired up — this is where a 2-3 sentence, " +
-  "facilitator-readable synthesis of the room's choices will appear.";

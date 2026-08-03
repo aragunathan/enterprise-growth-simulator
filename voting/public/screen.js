@@ -136,7 +136,7 @@ function renderReveal(resolution, result) {
   `;
 }
 
-function renderReport(report, layer2Placeholder) {
+function renderReport(report, layer2Narrative) {
   if (!report) {
     root.innerHTML = '<div class="card"><h2>Report unavailable</h2></div>';
     return;
@@ -168,7 +168,7 @@ function renderReport(report, layer2Placeholder) {
     </div>
     <div class="card">
       <h3>AI-generated narrative</h3>
-      <p class="muted"><em>${layer2Placeholder || "Not yet available."}</em></p>
+      <p class="muted"><em>${layer2Narrative || "Not yet available."}</em></p>
     </div>
   `;
 }
@@ -190,5 +190,5 @@ socket.on("vote:revealed", (payload) => {
 });
 
 socket.on("game:report", (payload) => {
-  renderReport(payload.report, payload.layer2Placeholder);
+  renderReport(payload.report, payload.layer2Narrative);
 });

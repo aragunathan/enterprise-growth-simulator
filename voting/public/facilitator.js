@@ -185,10 +185,10 @@ function renderReveal(resolution, result, isGameComplete) {
 }
 
 socket.on("game:report", (payload) => {
-  renderReport(payload.report, payload.layer2Placeholder);
+  renderReport(payload.report, payload.layer2Narrative);
 });
 
-function renderReport(report, layer2Placeholder) {
+function renderReport(report, layer2Narrative) {
   el("game-panel").style.display = "none";
   el("room-panel").style.display = "none";
   const panel = el("report-panel");
@@ -214,7 +214,7 @@ function renderReport(report, layer2Placeholder) {
     <h3>Closing discussion question</h3>
     <p>${report.closingDiscussionQuestion.detail}</p>
     <h3>AI-generated narrative (Layer 2)</h3>
-    <p class="muted"><em>${layer2Placeholder || "Not available in this session."}</em></p>
+    <p class="muted"><em>${layer2Narrative || "Not available in this session."}</em></p>
   `;
 }
 
