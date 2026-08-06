@@ -4,8 +4,31 @@ const root = document.getElementById("root");
 let currentQuarter = null;
 let countdownHandle = null;
 
+// The 3 headline KPIs get a fixed brand-color assignment per the Kissflow
+// data-color spec; every other KPI stays neutral (no CSS class applied).
+const HEADLINE_KPI_CLASS = { RG: "kpi-rg", DV: "kpi-dv", EF: "kpi-ef" };
+
+let kpiState = null;
+let gameKpis = [];
+
 function fmtDelta(n) {
   return n > 0 ? `+${n}` : `${n}`;
+}
+
+function renderKpiHeadline(gameKpis, state) {
+  if (!state) return "";
+  const tiles = gameKpis
+    .filter((k) => HEADLINE_KPI_CLASS[k.id])
+    .map((k) => {
+      const cls = HEADLINE_KPI_CLASS[k.id];
+      return `
+        <div class="kpi-headline-tile ${cls}">
+          <div class="name">${k.name}</div>
+          <div class="value">${state[k.id]}</div>
+        </div>`;
+    })
+    .join("");
+  return `<div class="kpi-headline">${tiles}</div>`;
 }
 
 socket.emit("room:join", { code, role: "screen" }, (res) => {
@@ -17,6 +40,8 @@ socket.emit("room:join", { code, role: "screen" }, (res) => {
 });
 
 function applySnapshot(snapshot) {
+  if (snapshot.kpiState) kpiState = snapshot.kpiState;
+  if (snapshot.kpis) gameKpis = snapshot.kpis;
   if (snapshot.phase === "lobby") {
     renderLobby(snapshot);
   } else if (snapshot.phase === "report") {
@@ -57,16 +82,17 @@ function renderQuarter(quarter, quarterNumber, totalQuarters, tally, deadline) {
 
   root.innerHTML = `
     <div class="card">
-      <p class="muted">Quarter ${quarterNumber} of ${totalQuarters}</p>
+      <div class="row" style="justify-content:space-between; align-items:center">
+        <p class="muted" style="margin:0">Quarter ${quarterNumber} of ${totalQuarters}</p>
+        <span class="timer" id="timer"></span>
+      </div>
       <h1>${quarter.title}</h1>
       <p>${quarter.businessContext}</p>
       <p class="muted"><em>${quarter.whyItHappens}</em></p>
     </div>
+    ${renderKpiHeadline(gameKpis, kpiState)}
     <div class="card">
-      <div class="row" style="justify-content:space-between; align-items:center">
-        <h3 style="margin:0">Live tally</h3>
-        <span class="timer" id="timer"></span>
-      </div>
+      <h3 style="margin:0 0 4px">Live tally</h3>
       <div id="tally">${choiceRows}</div>
     </div>
     <div id="reveal-info"></div>
@@ -108,6 +134,10 @@ function startCountdown(deadline) {
 }
 
 function renderReveal(resolution, result) {
+  kpiState = result.kpiAfter;
+  const headlineEl = document.querySelector(".kpi-headline");
+  if (headlineEl) headlineEl.outerHTML = renderKpiHeadline(gameKpis, kpiState);
+
   const box = document.getElementById("reveal-info");
   if (!box) return;
   document.querySelectorAll("[data-choice]").forEach((rowEl) => {
@@ -179,6 +209,8 @@ socket.on("room:playerCount", (count) => {
 });
 
 socket.on("quarter:start", (payload) => {
+  if (payload.kpiState) kpiState = payload.kpiState;
+  if (payload.kpis) gameKpis = payload.kpis;
   renderQuarter(payload.quarter, payload.quarterNumber, payload.totalQuarters, payload.tally, payload.voteDeadline);
 });
 

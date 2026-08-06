@@ -4,6 +4,7 @@ import {
   generateLayer1Report,
   type ChoiceId,
   type GameData,
+  type KpiDefinition,
   type KpiState,
   type Layer1Report,
   type Quarter,
@@ -29,6 +30,7 @@ export interface RoomSnapshot {
   report: Layer1Report | null;
   playerCount: number;
   kpiState: KpiState;
+  kpis: KpiDefinition[];
 }
 
 /**
@@ -195,6 +197,7 @@ export class Room {
       report: this.report,
       playerCount: this.playerIds.size,
       kpiState: this.engine.state,
+      kpis: this.gameData.meta.kpis,
     };
   }
 }

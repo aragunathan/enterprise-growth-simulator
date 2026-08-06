@@ -50,7 +50,11 @@ export function createApp(options: AppOptions = {}): AppHandle {
   app.get("/screen/:code", (_req, res) => res.sendFile(join(PUBLIC_DIR, "screen.html")));
 
   const httpServer = createServer(app);
-  const io = new SocketIOServer(httpServer, { cors: { origin: "*" } });
+  // In production PUBLIC_URL is set to the real deployed origin, so the socket
+  // handshake only accepts connections from that origin. Left wide open ("*")
+  // only when PUBLIC_URL is unset, i.e. local dev where the origin is unpredictable
+  // (localhost, a LAN IP for phone testing, etc.).
+  const io = new SocketIOServer(httpServer, { cors: { origin: options.publicUrl ?? "*" } });
 
   function resolvePublicUrl(): string {
     if (options.publicUrl) return options.publicUrl;
@@ -67,6 +71,8 @@ export function createApp(options: AppOptions = {}): AppHandle {
       voteDeadline: room.voteDeadline,
       voteTimerSeconds: room.gameData.meta.voteTimerSeconds,
       tally: room.tally(),
+      kpiState: room.engine.state,
+      kpis: room.gameData.meta.kpis,
     });
   }
 

@@ -1,27 +1,96 @@
+/*
+ * Kissflow brand tokens. Font files are not yet in this repo — drop licensed
+ * Graphik woff2 files at /fonts/Graphik-{Regular,Medium,Semibold,Bold}.woff2
+ * and these @font-face rules activate with no other changes. Until then the
+ * fallback stack below is used; it is not Graphik and is not a substitute.
+ */
+@font-face {
+  font-family: "Graphik";
+  src: url("/fonts/Graphik-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Graphik";
+  src: url("/fonts/Graphik-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Graphik";
+  src: url("/fonts/Graphik-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Graphik";
+  src: url("/fonts/Graphik-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  color-scheme: dark;
-  --bg: #0f1420;
-  --panel: #171f30;
-  --panel-2: #202b42;
-  --border: #2c3a56;
-  --text: #e8ecf6;
-  --muted: #93a0bd;
-  --accent: #5b8cff;
-  --good: #3fd37a;
-  --bad: #ff6262;
-  --warn: #ffb547;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Kissflow brand palette — magenta and blue are primary; orange and green
+     are secondary accents only. Do not introduce a 5th color anywhere. */
+  --kf-magenta: #cf2c91;
+  --kf-blue: #1f80ff;
+  --kf-orange: #f58220;
+  --kf-green: #4aa147;
+  --kf-black: #000000;
+  --kf-white: #ffffff;
+
+  /* Neutral grays for non-brand-color chrome (borders, disabled states,
+     secondary text) — never used for data/state, only structure. */
+  --gray-100: #f4f4f5;
+  --gray-300: #d4d4d8;
+  --gray-500: #8a8a92;
+  --gray-700: #3f3f46;
+  --gray-900: #17171a;
+
+  font-family: "Graphik", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-style: normal; /* Graphik has no italic in the approved brand set */
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* Default ground: black, logo-safe, the "serious exhibit" surface used by
+   the facilitator console and the shared screen. The vote page opts into
+   the white ground explicitly via body.light (see below). */
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
   min-height: 100vh;
+  background: var(--kf-black);
+  color: var(--kf-white);
+}
+
+body.light {
+  background: var(--kf-white);
+  color: var(--kf-black);
+}
+
+/* Local tokens that flip between the two brand-approved grounds so shared
+   component classes (.card, .muted, button, etc.) stay ground-agnostic. */
+body {
+  --fg: var(--kf-white);
+  --bg: var(--kf-black);
+  --panel: var(--gray-900);
+  --panel-2: #232326;
+  --border: var(--gray-700);
+  --muted: var(--gray-500);
+}
+body.light {
+  --fg: var(--kf-black);
+  --bg: var(--kf-white);
+  --panel: var(--gray-100);
+  --panel-2: #ebebed;
+  --border: var(--gray-300);
+  --muted: #55555c;
 }
 
 .wrap {
@@ -36,6 +105,7 @@ body {
 
 h1, h2, h3 {
   line-height: 1.2;
+  font-weight: 700; /* Graphik Bold */
 }
 
 .card {
@@ -58,34 +128,40 @@ h1, h2, h3 {
 
 button {
   font: inherit;
+  font-weight: 500; /* Graphik Medium */
   cursor: pointer;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--panel-2);
-  color: var(--text);
+  color: var(--fg);
   padding: 12px 18px;
 }
 
 button:hover:not(:disabled) {
-  border-color: var(--accent);
+  border-color: var(--kf-blue);
 }
 
 button:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
+/* Primary action = blue, the brand's primary interactive color. */
 button.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #0b1020;
-  font-weight: 700;
+  background: var(--kf-blue);
+  border-color: var(--kf-blue);
+  color: var(--kf-white);
+  font-weight: 600;
 }
 
+/* Emergency/destructive facilitator action. Magenta rather than an
+   off-brand red — kept rare and reserved for genuinely disruptive actions,
+   consistent with magenta already carrying "this needs attention" meaning
+   on the shared screen's Enterprise Friction tile. */
 button.danger {
-  background: #3a1622;
-  border-color: var(--bad);
-  color: var(--bad);
+  background: transparent;
+  border-color: var(--kf-magenta);
+  color: var(--kf-magenta);
 }
 
 .row {
@@ -106,6 +182,7 @@ button.danger {
   padding: 16px;
   min-height: 96px;
   font-size: 0.95rem;
+  font-weight: 600; /* Graphik Semibold, per spec, for the 4 choice buttons */
   white-space: normal;
 }
 
@@ -121,14 +198,17 @@ button.danger {
   font-weight: 700;
 }
 
+/* Selection/state changes are the only place the vote page uses brand
+   color — everything else on that page stays black-on-white. */
 .choice-btn.selected {
-  border-color: var(--good);
-  box-shadow: 0 0 0 1px var(--good);
+  border-color: var(--kf-blue);
+  box-shadow: 0 0 0 1px var(--kf-blue);
+  background: color-mix(in srgb, var(--kf-blue) 8%, transparent);
 }
 
 .choice-btn.winner {
-  border-color: var(--good);
-  background: #103822;
+  border-color: var(--kf-blue);
+  box-shadow: 0 0 0 1px var(--kf-blue);
 }
 
 .tally-row {
@@ -146,19 +226,24 @@ button.danger {
   overflow: hidden;
 }
 
+/* Vote-tally bars are not a headline KPI — kept neutral so brand color
+   stays reserved for the 3 KPI tiles and the timer, not decoration. */
 .tally-row .bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: var(--muted);
 }
 
+/* Countdown timer — orange is used nowhere else, per brand spec
+   ("secondary accent only", reserved here for urgency). */
 .timer {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   font-size: 1.4rem;
+  color: var(--kf-orange);
 }
 
 .timer.low {
-  color: var(--warn);
+  color: var(--kf-magenta);
 }
 
 .kpi-grid {
@@ -171,9 +256,17 @@ button.danger {
 .kpi-tile {
   background: var(--panel-2);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px;
 }
+
+/* Headline-KPI color assignment. Applied only to RG / DV / EF — every other
+   KPI (Cash, EE, CX, Comp, Innov) stays neutral, per spec: brand colors are
+   data colors for the 3 headline metrics only, not a 5-color rainbow. */
+.kpi-tile.kpi-rg { border-left-color: var(--kf-blue); }
+.kpi-tile.kpi-dv { border-left-color: var(--kf-green); }
+.kpi-tile.kpi-ef { border-left-color: var(--kf-magenta); }
 
 .kpi-tile .name {
   color: var(--muted);
@@ -182,16 +275,60 @@ button.danger {
 
 .kpi-tile .value {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 700; /* Graphik Bold */
 }
 
+.kpi-tile.kpi-rg .value { color: var(--kf-blue); }
+.kpi-tile.kpi-dv .value { color: var(--kf-green); }
+.kpi-tile.kpi-ef .value { color: var(--kf-magenta); }
+
 .kpi-tile .delta.up {
-  color: var(--good);
+  color: var(--kf-green);
 }
 
 .kpi-tile .delta.down {
-  color: var(--bad);
+  color: var(--kf-magenta);
 }
+
+/* Large-format headline strip on the shared screen — same 3-KPI color
+   mapping, projector-legible size. */
+.kpi-headline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.kpi-headline-tile {
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.kpi-headline-tile.kpi-rg { border-top-color: var(--kf-blue); }
+.kpi-headline-tile.kpi-dv { border-top-color: var(--kf-green); }
+.kpi-headline-tile.kpi-ef { border-top-color: var(--kf-magenta); }
+
+.kpi-headline-tile .name {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kpi-headline-tile .value {
+  font-size: 2.75rem;
+  font-weight: 700; /* Graphik Bold */
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.kpi-headline-tile.kpi-rg .value { color: var(--kf-blue); }
+.kpi-headline-tile.kpi-dv .value { color: var(--kf-green); }
+.kpi-headline-tile.kpi-ef .value { color: var(--kf-magenta); }
 
 .pill {
   display: inline-block;
@@ -203,8 +340,8 @@ button.danger {
 }
 
 .pill.tie {
-  border-color: var(--warn);
-  color: var(--warn);
+  border-color: var(--kf-orange);
+  color: var(--kf-orange);
 }
 
 .center {
@@ -227,11 +364,51 @@ img.qr {
   height: 36px;
   border-radius: 50%;
   border: 4px solid var(--panel-2);
-  border-top-color: var(--accent);
+  border-top-color: var(--kf-blue);
   margin: 0 auto 16px;
   animation: spin 0.9s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/*
+ * Logo clear zone (shared screen only — the vote page's viewport is too
+ * narrow to give the mark its required clear space without crowding the
+ * choice buttons, so it's omitted there per the brand review).
+ *
+ * Clear-zone rule: no other element may render inside the padded box below.
+ * The padding is sized to the logo's own cap-height (a common clear-zone
+ * unit for wordmarks) so it scales if the logo's rendered size changes.
+ * #brand-logo is a real <img> — nothing here recolors, crops, or otherwise
+ * modifies it; it is only sized and positioned as a fixed asset.
+ */
+.brand-mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 24px;
+  z-index: 10;
+}
+
+.brand-mark img {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+
+/* Safety fallback if /kissflow-logo.png ever fails to load (see the img's
+   onerror in screen.html) — plain wordmark, correct capitalization, no
+   attempt to imitate the graphic mark. */
+.brand-mark .wordmark-fallback {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Reserves the logo's clear zone at the top of the shared screen so no
+   card content renders underneath it. */
+.screen-header-spacer {
+  height: 76px;
 }
