@@ -84,7 +84,7 @@
     ],
     "frictionDriftPerQuarter": 3,
     "frictionDriftAppliesTo": "EF",
-    "voteTimerSeconds": 20,
+    "voteTimerSeconds": 60,
     "tieBreakPriority": [
       {
         "kpi": "EF",

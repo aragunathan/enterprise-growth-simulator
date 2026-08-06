@@ -6,6 +6,7 @@ let code = pathCode && pathCode.toLowerCase() !== "vote" ? pathCode.toUpperCase(
 let currentQuarter = null;
 let myVote = null;
 let myVoteQuarterId = null;
+let countdownHandle = null;
 
 function render(html) {
   root.innerHTML = html;
@@ -47,7 +48,7 @@ function applySnapshot(snapshot) {
   } else if (snapshot.quarter) {
     currentQuarter = snapshot.quarter;
     if (snapshot.phase === "voting") {
-      renderChoices(snapshot.quarter);
+      renderChoices(snapshot.quarter, snapshot.voteDeadline);
     } else {
       renderWaitingForReveal(snapshot.quarter);
     }
@@ -64,7 +65,7 @@ function renderLobby() {
   `);
 }
 
-function renderChoices(quarter) {
+function renderChoices(quarter, deadline) {
   currentQuarter = quarter;
   const alreadyVoted = myVoteQuarterId === quarter.id;
   if (alreadyVoted) {
@@ -78,14 +79,38 @@ function renderChoices(quarter) {
     .join("");
   render(`
     <div class="card">
-      <p class="muted">Q${quarter.id}</p>
+      <div class="row" style="justify-content:space-between; align-items:center">
+        <p class="muted" style="margin:0">Q${quarter.id}</p>
+        <span class="timer" id="vote-timer"></span>
+      </div>
       <h2>${quarter.title}</h2>
+      <p>${quarter.businessContext}</p>
       <div class="choice-grid">${buttons}</div>
     </div>
   `);
   document.querySelectorAll(".choice-btn").forEach((btn) => {
     btn.addEventListener("click", () => castVote(quarter, btn.dataset.choice));
   });
+  if (deadline) startCountdown(deadline);
+}
+
+function startCountdown(deadline) {
+  if (countdownHandle) clearInterval(countdownHandle);
+  function tick() {
+    const timerEl = document.getElementById("vote-timer");
+    if (!timerEl) {
+      clearInterval(countdownHandle);
+      return;
+    }
+    const secondsLeft = Math.max(0, Math.round((deadline - Date.now()) / 1000));
+    timerEl.textContent = `${secondsLeft}s`;
+    timerEl.classList.toggle("low", secondsLeft <= 5 && secondsLeft > 0);
+    if (secondsLeft <= 0) {
+      clearInterval(countdownHandle);
+    }
+  }
+  tick();
+  countdownHandle = setInterval(tick, 250);
 }
 
 function castVote(quarter, choiceId) {
@@ -134,7 +159,7 @@ function renderThanks(report) {
 
 socket.on("quarter:start", (payload) => {
   myVote = null;
-  if (payload.quarter) renderChoices(payload.quarter);
+  if (payload.quarter) renderChoices(payload.quarter, payload.voteDeadline);
 });
 
 socket.on("vote:revealed", (payload) => {
